@@ -7,15 +7,21 @@ public class FormulationIngredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;  // ID artificial solo para JPA
+    private int id;  // ID artificial solo para JPA
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "formulation_id", nullable = false)
+    //@ManyToOne //( optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "formulation_id", nullable = true)
     private Formulation formulation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ingredient_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "ingredient_id" ) //, nullable = false)
     private Ingredient ingredient;
+
+    public FormulationIngredient() {
+
+
+    }
 
     public FormulationIngredient(Formulation formulation, Ingredient ingredient) {
         this.formulation = formulation;
@@ -23,8 +29,13 @@ public class FormulationIngredient {
 
     }
 
+    public Formulation getFormulation() {
+        return formulation;
+    }
 
-
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
 }
 
 

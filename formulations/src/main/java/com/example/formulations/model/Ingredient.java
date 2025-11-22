@@ -1,9 +1,7 @@
 package com.example.formulations.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -18,10 +16,19 @@ public class Ingredient {
     private Unit unit;
     private double cost;
 
+    @JsonIgnore
+    // @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ingredient",            cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    //@JoinColumn(name = "inssurance_cia_id")
     private List<Composition> compositions;
 
     public void setUnit(Unit unit) {
         this.unit = unit;
+    }
+
+    public Ingredient() {
+
     }
 
     public Ingredient(int id, String description, Unit unit,double cost) {

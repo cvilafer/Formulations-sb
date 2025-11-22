@@ -1,14 +1,43 @@
-package org.example.managers;
+package com.example.formulations.managers;
 
-import org.example.model.*;
+import com.example.formulations.model.*;
 
-import org.example.dataStore.DataStore;
+import com.example.formulations.dataStore.DataStore;
 
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
+import com.example.formulations.repository.IngredientRepository;
+import com.example.formulations.repository.ConstraintRepository;
+import com.example.formulations.repository.CompositionRepository;
+import com.example.formulations.repository.SolutionRepository;
+import com.example.formulations.repository.SolutionIngredientRepository;
+import com.example.formulations.repository.SolutionComponentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class Solver {
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
+
+    @Autowired
+    private ConstraintRepository constraintRepository;
+
+    @Autowired
+    private CompositionRepository compositionRepository;
+
+    @Autowired
+    private SolutionRepository solutionRepository;
+
+    @Autowired
+    private SolutionIngredientRepository solutionIngredientRepository;
+
+    @Autowired
+    private SolutionComponentRepository solutionComponentRepository;
 
     private int num_ing;   //   'Número d'ingredients utilitzats en la formulació. També número dimensions equacions
 
@@ -27,12 +56,14 @@ public class Solver {
 
     private DataStore dataStore;
 
-    public Solver(DataStore dataStore){
-        this.dataStore=dataStore;
+    public Solver(){
+
     }
 
     public void resoldre_formulacio(Formulation formulation) {
 
+
+        System.out.println("resoldre_formulacio");
         // 'Comprovar que els tots els ingredients tenen la mateix unitat o cap:
         //    If num_unitats_ingredients_formulacio_a_part_nul(Formulacio_escollida) > 1 Then
         //        MsgBox "Atenció: El programa suposa que tots els Ingredients i la Barreja final tenen la mateixa Unitat"
@@ -45,7 +76,9 @@ public class Solver {
             return;
         }
 
-        List<Ingredient> ingredients=dataStore.getIngredients();
+        //List<Ingredient> ingredients=dataStore.getIngredients();
+
+        List<Ingredient> ingredients=(List<Ingredient>)ingredientRepository.findAll();
 
         for(int i=1;i<=ingredients.size();i++) {
             ing[i]=ingredients.get(i-1).getId();
@@ -54,7 +87,9 @@ public class Solver {
 
         //Calcular número equacions total:
         int num_constraints=0;
-        List<Constraint> constraints=dataStore.getConstraints();
+        //List<Constraint> constraints=dataStore.getConstraints();
+
+        List<Constraint> constraints=(List<Constraint>)constraintRepository.findAll();
         /*for(int i=0;i<constraints.size();i++) {
             if(constraints.get(i).getFormulation()==formulation) {
                 num_constraints++;
@@ -105,12 +140,20 @@ public class Solver {
 
         int j = 1 + num_ing + 1;
 
-        List<Composition> compositions=dataStore.getCompositions();
+        //List<Composition> compositions=dataStore.getCompositions();
+
+        List<Composition> compositions=(List<Composition>)compositionRepository.findAll();
+
+        System.out.println(num_ing);
+        for(int i=1;i<=num_ing;i++) {
+            System.out.println(ing[i]);
+        }
 
         for(Constraint constraint:constraints) {
             if(constraint.getCantMin()!=null) {
                 for(int i=1;i<=num_ing;i++) {
                     int i2 = i;
+
                     List<Composition> compositions_ing=compositions.stream().filter(p -> p.getIngredient().getId() == ing[i2] && p.getComponent().getId()==constraint.getComponent().getId()).collect(Collectors.toList());
                     if(compositions_ing.size()==0) {
                         System.out.println("Falta indicar Composició per Ingredient " + ing[i2]);
@@ -167,7 +210,9 @@ public class Solver {
         num_solucions = 0;
 
 
-        dataStore.Borrar_Solucions();  //'Borrem les taules de Solucions abans de generar les Sol.lucions
+        Borrar_Solucions();  //'Borrem les taules de Solucions abans de generar les Sol.lucions
+
+
 
 
 
@@ -337,9 +382,24 @@ public class Solver {
     }
 
 
+    private void Borrar_Solucions() {
+        //solutions.clear();
+
+        solutionRepository.deleteAll();
+
+        //solutionIngredients.clear();
+
+        solutionIngredientRepository.deleteAll();
+
+        //solutionComponents.clear();
+
+        solutionComponentRepository.deleteAll();
+
+    }
 
 
-    public boolean resoldre_equacio() {  // 'Possible millora: Assegurar els 0's
+
+    private boolean resoldre_equacio() {  // 'Possible millora: Assegurar els 0's
 
         int f;
         int c;
@@ -389,12 +449,18 @@ public class Solver {
         return true;
     }
 
-    public void Afegir_Solucio(Formulation formulation) {
+    private void Afegir_Solucio(Formulation formulation) {
+
+        List<Ingredient> ingredients=(List<Ingredient>)ingredientRepository.findAll();
 
         double suma = 0;
         for(int i = 1;i<=num_ing;i++) {
             int i2=i;
-            List<Ingredient> ingredient=dataStore.getIngredients().stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
+
+
+
+            //List<Ingredient> ingredient=dataStore.getIngredients().stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
+            List<Ingredient> ingredient=ingredients.stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
             suma+=r[i]*ingredient.get(0).getCost();
         }
 
@@ -404,7 +470,9 @@ public class Solver {
         solution.setId(num_solucions);
         solution.setCost(suma);
         solution.setFormulation(formulation);
-        dataStore.getSolutions().add(solution);
+        //dataStore.getSolutions().add(solution);
+
+        solutionRepository.save(solution);
 
         // 'Afegim els ingredients i les seves quantitats a la taula Solucio_Ingredients:
 
@@ -413,11 +481,17 @@ public class Solver {
 
             SolutionIngredient solutionIngredient = new SolutionIngredient();
             solutionIngredient.setSolution(solution);
-            List<Ingredient> ingredient=dataStore.getIngredients().stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
+
+
+
+            //List<Ingredient> ingredient=dataStore.getIngredients().stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
+            List<Ingredient> ingredient=ingredients.stream().filter(p -> p.getId() == ing[i2]).collect(Collectors.toList());
             solutionIngredient.setIngredient(ingredient.get(0));
             solutionIngredient.setQuantity(r[i]);
 
-            dataStore.getSolutionsIngredients().add(solutionIngredient);
+            //dataStore.getSolutionsIngredients().add(solutionIngredient);
+
+            solutionIngredientRepository.save(solutionIngredient);
             solution.getSolutionIngredients().add(solutionIngredient);
 
             //'Afegim els components i les seves quantitats totals a la taula Solucio_Components:

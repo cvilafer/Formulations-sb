@@ -1,10 +1,10 @@
-package org.example.managers;
+package com.example.formulations.managers;
 
 import java.util.List;
 import java.util.Scanner;
 
-import org.example.dataStore.DataStore;
-import org.example.model.Unit;
+import com.example.formulations.dataStore.DataStore;
+import com.example.formulations.model.Unit;
 
 public class UnitManager {
 

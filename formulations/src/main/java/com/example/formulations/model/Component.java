@@ -23,6 +23,9 @@ public class Component {
         this.unit = unit;
     }
 
+    public Component() {
+
+    }
 
     public Component(int id, String description, Unit unit) {
         this.id = id;

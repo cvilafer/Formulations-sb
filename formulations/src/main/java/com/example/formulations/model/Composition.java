@@ -27,6 +27,10 @@ public class Composition {
         this.ingredient = ingredient;
     }
 
+    public Composition() {
+
+    }
+
     public Composition(Ingredient ingredient,Component component, double quantity) {
         this.ingredient = ingredient;
         this.component = component;

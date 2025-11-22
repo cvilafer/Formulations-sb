@@ -12,6 +12,11 @@ public class Unit {
     private int id;
     private String description;
 
+    public Unit() {
+
+
+    }
+
     public Unit(int id, String description) {
         this.id = id;
         this.description = description;

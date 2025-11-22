@@ -1,9 +1,10 @@
-package org.example.dataStore;
-import org.example.model.*;
+package com.example.formulations.dataStore;
+import com.example.formulations.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class DataStore {
 
     private static List<Ingredient> ingredients;

@@ -1,12 +1,15 @@
-package org.example.controller;
-import org.example.managers.*;
-import org.example.model.Solution;
+package com.example.formulations.controller;
+import com.example.formulations.managers.*;
+import com.example.formulations.model.Solution;
 import org.example.views.MainMenuView;
-import org.example.dataStore.DataStore;
+import com.example.formulations.dataStore.DataStore;
 import org.example.utilities.Utilities;
+
+import com.example.formulations.managers.*;
 
 import java.util.Scanner;
 
+@Deprecated
 public class MainDispatcher {
 
     public static void runner(DataStore myDataStore ) {
@@ -37,7 +40,7 @@ public class MainDispatcher {
             } else if (option.equals("4")){  //Solver
                 // option #4;
 
-                Solver solver=new Solver(myDataStore);
+                Solver solver=new Solver();
 
                 solver.resoldre_formulacio(myDataStore.getFormulations().get(0));
             } else if (option.equals("5")){  //Solver

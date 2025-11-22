@@ -1,10 +1,12 @@
 package com.example.formulations.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
 public class Formulation {
@@ -13,13 +15,31 @@ public class Formulation {
     private int id;
     private String description;
     private double lastCost;
-    private List<Ingredient> ingredients;
+
+    //private List<FormulationIngredient> ingredients;
+
+    /*@ManyToMany
+    @JoinTable(
+            name = "Ingredients_Formulacio",
+            joinColumns = @JoinColumn(name = "formulation_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )*/
+    @JsonIgnore
+    // @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //@OneToMany(mappedBy = "inssuranceCia", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "formulation",            cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    //@JoinColumn(name = "inssurance_cia_id")
+    private List<FormulationIngredient> ingredients;
+
+    public Formulation() {
+
+    }
 
     public Formulation(int id, String description,double lastCost) {
         this.id = id;
         this.description = description;
         this.lastCost = lastCost;
-        ingredients=new ArrayList<Ingredient>();
+        ingredients=new ArrayList<FormulationIngredient>();
     }
 
     public int Get_Num_Ingredients() {
@@ -31,7 +51,7 @@ public class Formulation {
     }
     public void setDescription(String description) {}
 
-    public List<Ingredient>  GetIngredients(){
+    public List<FormulationIngredient>  GetIngredients(){
         return ingredients;
     }
 

@@ -3,6 +3,7 @@ package com.example.formulations.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "constraints") // usa un nombre que no sea reservado
 public class Constraint {
 
     @Id
@@ -21,6 +22,11 @@ public class Constraint {
 
     public void setComponent(Component component) {
         this.component = component;
+    }
+
+    public Constraint() {
+
+
     }
 
     public Constraint(Formulation formulation, Component component, double Cant_min, double Cant_max) {
