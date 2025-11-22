@@ -369,7 +369,13 @@ public class Solver {
         //'Copiar Cost mínim al registre associat a la Formulació:
         double min_cost;
 
-        OptionalDouble min_cost_o = dataStore.getSolutions().stream()
+        List<Solution> solutions =(List<Solution>)solutionRepository.findAll();
+
+        /*OptionalDouble min_cost_o = dataStore.getSolutions().stream()
+                .mapToDouble(Solution::getCost)
+                .min();*/
+
+        OptionalDouble min_cost_o = solutions.stream()
                 .mapToDouble(Solution::getCost)
                 .min();
 

@@ -154,6 +154,9 @@ public class PopulateTables {
 
     public void PopulateAll() {
 
+        constraintRepository.deleteAll();
+        formulationIngredientRepository.deleteAll();
+
         PopulateUnit();
 
         PopulateComponent();
