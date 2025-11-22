@@ -1,6 +1,6 @@
 # Formulations-sb
 
-Here as part of the personal project in the Fullstack Java Course we ara converting the "Formulations" repository/app to Spring Boot. It tries to find the minimum cost solution to the animal food formulation problem with some constraints.
+Here as part of the personal project in the Fullstack Java Course we ara converting the "Formulations" repository/app to Java Spring Boot. It tries to find the minimum cost solution for the animal food formulation problem with some constraints.
 
 For the moment we populate the initial data in the H2 database.
 
@@ -11,7 +11,16 @@ http://localhost:8080/api/ingredients
 [{"id":1,"description":"Arros","unit":{"id":1,"description":"g"},"cost":3.0},{"id":2,"description":"Blat","unit":{"id":1,"description":"g"},"cost":2.0},{"id":3,"description":"Pollastre","unit":{"id":1,"description":"g"},"cost":5.0}]
 
 http://localhost:8080/api/formulationingredients
+
+...
+
 http://localhost:8080/api/compositions
+
+...
+
+http://localhost:8080/api/constraints
+
+[{"formulation":{"description":"Primera Formulació de prova"},"component":{"id":1,"description":"Grasses","unit":{"id":1,"description":"g"}},"cantMin":0.3,"cantMax":0.5},{"formulation":{"description":"Primera Formulació de prova"},"component":{"id":2,"description":"Proteines","unit":{"id":1,"description":"g"}},"cantMin":0.4,"cantMax":0.6},{"formulation":{"description":"Primera Formulació de prova"},"component":{"id":3,"description":"Fibra","unit":{"id":1,"description":"g"}},"cantMin":0.05,"cantMax":0.15}]
 
 http://localhost:8080/api/components
 
